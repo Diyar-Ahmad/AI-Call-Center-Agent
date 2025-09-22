@@ -1,0 +1,50 @@
+.container {
+  padding: 20px;
+}
+
+.full-width-table {
+  width: 100%;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.status {
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  text-transform: capitalize;
+  display: inline-block;
+}
+
+.status.pending {
+  background-color: #ffc107; /* Amber */
+}
+
+.status.confirmed {
+  background-color: #28a745; /* Green */
+}
+
+.status.completed {
+  background-color: #007bff; /* Blue */
+}
+
+.status.cancelled {
+  background-color: #dc3545; /* Red */
+}
+
+.communication-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.communication-buttons a {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}

@@ -1,0 +1,44 @@
+.sidenav-container {
+  height: 100vh;
+}
+
+.mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000; /* Ensure toolbar is always on top */
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.mat-nav-list a {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 4px;
+  margin: 4px 8px;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s; /* Added box-shadow */
+  text-decoration: none;
+  color: #333; /* Very dark gray for strong contrast */
+  background-color: #ffffff; /* Explicit white background for clarity */
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1); /* Subtle initial shadow */
+}
+
+.mat-nav-list a:hover {
+  background-color: #f0f0f0; /* Slightly darker on hover */
+  color: #000; /* Even darker text on hover */
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.15); /* Inset shadow on hover */
+}
+
+.mat-nav-list a mat-icon {
+  margin-right: 8px;
+  color: #555; /* Darker icon color */
+}
+
+/* Ensure menu icon is visible */
+.mat-toolbar button.mat-icon-button mat-icon {
+  color: white !important; /* Force white color for the menu icon */
+}
