@@ -5,11 +5,44 @@
       <a mat-list-item routerLink="/bookings" (click)="sidenav.close()" *ngIf="isLoggedIn">
         <mat-icon>book</mat-icon> Bookings
       </a>
+      <a mat-list-item routerLink="/request-ride" (click)="sidenav.close()" *ngIf="isLoggedIn">
+        <mat-icon>add_road</mat-icon> Request Ride
+      </a>
+      <a mat-list-item routerLink="/driver-dashboard" (click)="sidenav.close()" *ngIf="isLoggedIn && userRole === 'DRIVER'">
+        <mat-icon>drive_eta</mat-icon> Driver Dashboard
+      </a>
+      <a mat-list-item routerLink="/admin/driver-approvals" (click)="sidenav.close()" *ngIf="isLoggedIn && userRole === 'ADMIN'">
+        <mat-icon>how_to_reg</mat-icon> Driver Approvals
+      </a>
+      <a mat-list-item routerLink="/drivers" (click)="sidenav.close()" *ngIf="isLoggedIn && userRole === 'ADMIN'">
+        <mat-icon>people</mat-icon> Drivers
+      </a>
+      <a mat-list-item routerLink="/admin/map" (click)="sidenav.close()" *ngIf="isLoggedIn && userRole === 'ADMIN'">
+        <mat-icon>map</mat-icon> Admin Map
+      </a>
+      <a mat-list-item routerLink="/admin/analytics" (click)="sidenav.close()" *ngIf="isLoggedIn && userRole === 'ADMIN'">
+        <mat-icon>analytics</mat-icon> Admin Analytics
+      </a>
+      <a mat-list-item routerLink="/admin/zones" (click)="sidenav.close()" *ngIf="isLoggedIn && userRole === 'ADMIN'">
+        <mat-icon>map</mat-icon> Zone Management
+      </a>
+      <a mat-list-item routerLink="/driver-simulator" (click)="sidenav.close()" *ngIf="isLoggedIn && userRole === 'ADMIN'">
+        <mat-icon>gamepad</mat-icon> Driver Simulator
+      </a>
       <a mat-list-item routerLink="/login" (click)="sidenav.close()" *ngIf="!isLoggedIn">
         <mat-icon>login</mat-icon> Login
       </a>
       <a mat-list-item routerLink="/register" (click)="sidenav.close()" *ngIf="!isLoggedIn">
         <mat-icon>person_add</mat-icon> Register
+      </a>
+      <a mat-list-item routerLink="/driver-login" (click)="sidenav.close()" *ngIf="!isLoggedIn">
+        <mat-icon>local_taxi</mat-icon> Driver Login
+      </a>
+      <a mat-list-item routerLink="/register-driver" (click)="sidenav.close()" *ngIf="!isLoggedIn">
+        <mat-icon>app_registration</mat-icon> Register Driver
+      </a>
+      <a mat-list-item routerLink="/driver-application" (click)="sidenav.close()" *ngIf="!isLoggedIn">
+        <mat-icon>app_registration</mat-icon> Update Driver Application
       </a>
       <a mat-list-item (click)="logout(); sidenav.close()" *ngIf="isLoggedIn">
         <mat-icon>logout</mat-icon> Logout

@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "windows" , "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -10,43 +11,137 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  role      Role     @default(CUSTOMER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  bookings  Booking[] // A user can have multiple bookings
+model Booking {
+  id               Int      @id @default(autoincrement())
+  pickupLocation   String
+  dropoffLocation  String
+  pickupLat        Float    @default(0)
+  pickupLng        Float    @default(0)
+  dropoffLat       Float    @default(0)
+  dropoffLng       Float    @default(0)
+  fare             Float    @default(0.0) // New fare field
+  vehicleType      String?  // e.g., 'CAR', 'BIKE', 'AC_CAR'
+  pickupDateTime   DateTime
+  passengers       Int
+  phoneNumber      String
+  status           BookingStatus   @default(PENDING)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  userId           Int
+  user             User     @relation(fields: [userId], references: [id])
+  driverId         Int?
+  driver           Driver?  @relation(fields: [driverId], references: [id])
+  chatMessages     ChatMessage[]
 }
 
-model Booking {
-  id              Int       @id @default(autoincrement())
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  phoneNumber     String
-  pickupLocation  String
-  pickupLat       Float?
-  pickupLng       Float?
-  dropoffLocation String
-  dropoffLat      Float?
-  dropoffLng      Float?
-  pickupDateTime  DateTime
-  passengers      Int
-  status          BookingStatus @default(PENDING)
-  // Link to User
-  userId          Int
-  user            User      @relation(fields: [userId], references: [id])
+model User {
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  password      String
+  role          String    @default("CUSTOMER") // CUSTOMER or ADMIN
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  bookings      Booking[]
+  phoneNumber   String?   @unique
+}
+
+enum DriverStatus {
+  OFFLINE
+  AVAILABLE
+  ON_TRIP
+  BUSY
+}
+
+model Driver {
+  id                      Int       @id @default(autoincrement())
+  email                   String?   @unique // Added email field
+  name                    String
+  phoneNumber             String    @unique
+  password                String // New password field
+  idCardNumber            String?
+  drivingLicense              String?
+  idCardIssueDate             DateTime?
+  idCardExpiryDate            DateTime?
+  drivingLicenseIssueDate     DateTime?
+  drivingLicenseExpiryDate    DateTime?
+  status                      DriverStatus    @default(OFFLINE)
+  approvalStatus              String    @default("PENDING") // PENDING, APPROVED, REJECTED
+  currentLat              Float?
+  currentLng              Float?
+  rating                  Float     @default(0.0) // New rating field
+  vehicleTypePreference   String? // e.g., 'CAR', 'BIKE', 'AC_CAR'
+  missedRides             Int       @default(0)
+  lastSeen                DateTime  @default(now())
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  bookings                Booking[]
+  vehicles                Vehicle[]
+  documents               Document[]
+  preferredZones          Zone[]    @relation
+}
+
+model Zone {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  boundaries  Json
+  drivers     Driver[] @relation
+}
+
+model Document {
+  id        Int      @id @default(autoincrement())
+  driverId  Int
+  driver    Driver   @relation(fields: [driverId], references: [id])
+  type      String   // e.g., 'driverPhoto', 'idCardFront', etc.
+  url       String
+  status    String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Vehicle {
+  id            Int      @id @default(autoincrement())
+  driverId      Int
+  driver        Driver   @relation(fields: [driverId], references: [id])
+  type          String   // CAR, BIKE, TRUCK, AC_CAR
+  make          String
+  model         String
+  licensePlate  String   @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 enum BookingStatus {
   PENDING
+  OFFERED
+  DRIVER_ACCEPTED
+  DRIVER_EN_ROUTE
+  ARRIVED_AT_PICKUP
+  ON_RIDE
   CONFIRMED
   COMPLETED
   CANCELLED
+  NO_DRIVER_FOUND
+  NO_DRIVER_AVAILABLE
 }
 
 enum Role {
   CUSTOMER
   ADMIN
+}
+
+model PasswordReset {
+  id        Int      @id @default(autoincrement())
+  email     String
+  token     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model ChatMessage {
+  id        Int      @id @default(autoincrement())
+  bookingId Int
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+  senderId  Int      // ID of the sender (User or Driver)
+  senderType String  // 'USER' or 'DRIVER'
+  message   String
+  timestamp DateTime @default(now())
 }

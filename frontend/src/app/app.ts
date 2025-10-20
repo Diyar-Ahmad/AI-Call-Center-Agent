@@ -49,6 +49,8 @@ export class App implements OnInit, OnDestroy { // Implemented OnDestroy
   }
 
   ngOnInit(): void {
+    this.isLoggedIn = this.authService.isLoggedIn(); // Initialize isLoggedIn
+    this.userRole = this.authService.getUserRole(); // Initialize userRole
     this.authService.isLoggedIn$.subscribe(loggedIn => {
       this.isLoggedIn = loggedIn;
       this.userRole = this.authService.getUserRole();
